@@ -8,7 +8,7 @@ class QueueManager:
         self.back_queues = BackQueues()
         self.heap = CrawlerHeap()
 
-    def add_to_back_queue(self, urls):
+    def add_to_back_queues(self, urls):
         for url in urls:
             self.back_queues.add_url(url)
             self.heap_push(get_hostname(url))
