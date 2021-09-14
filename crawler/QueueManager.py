@@ -1,5 +1,5 @@
-from BackQueues import BackQueues
-from CrawlerHeap import CrawlerHeap
+from crawler.BackQueues import BackQueues
+from crawler.CrawlerHeap import CrawlerHeap
 from helpers.UrlParser import get_hostname
 
 

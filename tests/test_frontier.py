@@ -1,6 +1,6 @@
 import unittest
 
-from Frontier import Frontier
+from crawler.Frontier import Frontier
 
 
 class FrontierTests(unittest.TestCase):

@@ -2,7 +2,7 @@ import unittest
 
 from bs4 import BeautifulSoup
 
-from Crawler import Crawler
+from crawler.Crawler import Crawler
 
 
 class CrawlerTests(unittest.TestCase):
