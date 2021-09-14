@@ -13,6 +13,18 @@ class QueueManager:
             self.back_queues.add_url(url)
             self.heap_push(get_hostname(url))
 
+    def get_new_seed(self):
+        new_host = self.heap_pop()
+        back_queue = self.get_queue(new_host)
+        new_seed = back_queue.pop(0)
+
+        if len(back_queue) == 0:
+            self.remove_queue(new_host)
+        else:
+            self.heap_push(new_host)
+
+        return new_seed
+
     def get_queue(self, hostname):
         return self.back_queues.get_queue(hostname)
 
