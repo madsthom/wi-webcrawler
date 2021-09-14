@@ -3,21 +3,22 @@ from urllib.robotparser import RobotFileParser
 import requests
 from bs4 import BeautifulSoup
 
-from BackQueues import BackQueues
 from Frontier import Frontier
-from UrlParser import get_hostname
+from QueueManager import QueueManager
 
+
+# TODO:
+# - Heap should be a class
+# - Look at what exceptions get thrown
 
 class Crawler:
     def __init__(self, seeds):
         self.frontier = Frontier(seeds)
-        self.back_queues = BackQueues()
-        self.heap = []
+        self.queue_manager = QueueManager()
 
     @staticmethod
     def crawl_allowed(url):
         try:
-            print(url)
             rp = RobotFileParser()
             rp.set_url(url)
             rp.read()
@@ -25,9 +26,9 @@ class Crawler:
         except:
             return False
 
-    @staticmethod
-    def extract_urls(doc: BeautifulSoup):
-        a_tags = doc.find_all('a')
+    def extract_urls(self, url: str):
+        parsed_html = self.query_html(url)
+        a_tags = parsed_html.find_all('a')
 
         valid_urls = []
 
@@ -45,8 +46,17 @@ class Crawler:
         while len(self.frontier) > 0:
             url = self.frontier.get_url()
             if self.crawl_allowed(url):
-                hostname = get_hostname(url)
-                parsed_html = self.query_html(url)
-                new_urls = self.extract_urls(parsed_html)
+                new_urls = self.extract_urls(url)
+                self.queue_manager.add_to_back_queue(new_urls)
 
-                self.back_queues.add_urls(hostname, new_urls)
+            if len(self.frontier) == 0:
+                new_host = self.queue_manager.heap_pop()
+                back_queue = self.queue_manager.get_queue(new_host)
+                self.frontier.add(back_queue.pop(0))
+
+                if len(back_queue) == 0:
+                    self.queue_manager.remove_queue(new_host)
+                else:
+                    self.queue_manager.heap_push(new_host)
+
+
