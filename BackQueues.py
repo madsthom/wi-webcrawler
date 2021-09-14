@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from UrlParser import get_hostname
+from helpers.UrlParser import get_hostname
 
 
 @dataclass

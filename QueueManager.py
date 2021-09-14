@@ -1,6 +1,6 @@
 from BackQueues import BackQueues
 from CrawlerHeap import CrawlerHeap
-from UrlParser import get_hostname
+from helpers.UrlParser import get_hostname
 
 
 class QueueManager:

@@ -1,7 +1,7 @@
 from urllib.robotparser import RobotFileParser
 
 from Frontier import Frontier
-from HtmlParser import extract_links_from, get_title
+from helpers.HtmlParser import extract_links_from, get_title
 from QueueManager import QueueManager
 
 
