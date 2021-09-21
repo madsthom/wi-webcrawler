@@ -2,7 +2,6 @@ import unittest
 
 from bs4 import BeautifulSoup
 
-from crawler.Crawler import Crawler
 from helpers.HtmlParser import extract_links_from_bs4
 
 
