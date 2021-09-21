@@ -11,8 +11,11 @@ def find_valid_urls(a_tags):
 
 
 def query_html(url):
-    response = requests.get(url)
-    return BeautifulSoup(response.text, 'html.parser')
+    try:
+        response = requests.get(url)
+        return BeautifulSoup(response.text, 'html.parser')
+    except:
+        return ""
 
 
 def get_title(parsed_html):
