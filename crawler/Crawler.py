@@ -1,9 +1,12 @@
+import socket
 from time import sleep
 from urllib.robotparser import RobotFileParser
 
 from crawler.Frontier import Frontier
 from helpers.HtmlParser import extract_links_from, get_title, query_html
 from crawler.QueueManager import QueueManager
+
+DEFAULT_TIMEOUT = 5
 
 
 # TODO:
@@ -15,6 +18,7 @@ class Crawler:
         self.frontier = Frontier(seeds)
         self.queue_manager = QueueManager()
         self.crawled_titles = []
+        socket.setdefaulttimeout(DEFAULT_TIMEOUT)
 
     @staticmethod
     def crawl_allowed(url):
@@ -39,14 +43,17 @@ class Crawler:
         self.queue_manager.add_to_back_queues(new_urls)
 
         self.save_url_entry(url)
+        print(self.crawled_titles)
 
     def crawl(self):
         while not self.frontier.empty():
             sleep(1)
             url = self.frontier.get_url()
+            print("trying to crawl: " + url)
             if self.crawl_allowed(url) and not self.visited(url):
-                print(url)
+                print("crawling: " + url)
                 self.process(url)
-
+            else:
+                print("could not crawl")
             if self.frontier.empty():
                 self.frontier.add(self.queue_manager.get_new_seed())
