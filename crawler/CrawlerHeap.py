@@ -3,7 +3,7 @@ class CrawlerHeap:
         self.heap = []
 
     def pop(self):
-        return self.heap.pop(0)  # If .pop(0) then breadth first
+        return self.heap.pop()  # If .pop(0) then breadth first
 
     def push(self, hostname):
         if hostname not in self.heap:

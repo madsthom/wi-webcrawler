@@ -36,6 +36,7 @@ class Crawler:
     def process(self, url):
         parsed_html = query_html(url)
         title = get_title(parsed_html)
+        print(title)
 
         self.crawled_titles.append(title)
 
@@ -43,17 +44,18 @@ class Crawler:
         self.queue_manager.add_to_back_queues(new_urls)
 
         self.save_url_entry(url)
-        print(self.crawled_titles)
 
     def crawl(self):
-        while not self.frontier.empty():
+        i = 0
+        while i < 10:
+        #while not self.frontier.empty():
             sleep(1)
             url = self.frontier.get_url()
-            print("trying to crawl: " + url)
             if self.crawl_allowed(url) and not self.visited(url):
-                print("crawling: " + url)
                 self.process(url)
-            else:
-                print("could not crawl")
             if self.frontier.empty():
                 self.frontier.add(self.queue_manager.get_new_seed())
+            i += 1
+
+        # Should not return anything tho, only for test
+        return list(zip(self.crawled_urls, self.crawled_titles))
