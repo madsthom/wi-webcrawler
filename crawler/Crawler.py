@@ -1,8 +1,9 @@
+from time import sleep
 from urllib.robotparser import RobotFileParser
 
-from Frontier import Frontier
-from helpers.HtmlParser import extract_links_from, get_title
-from QueueManager import QueueManager
+from crawler.Frontier import Frontier
+from helpers.HtmlParser import extract_links_from, get_title, query_html
+from crawler.QueueManager import QueueManager
 
 
 # TODO:
@@ -17,31 +18,34 @@ class Crawler:
 
     @staticmethod
     def crawl_allowed(url):
-        try:
-            rp = RobotFileParser()
-            rp.set_url(url)
-            rp.read()
-            return rp.can_fetch("*", url)
-        except:
-            return False
+        rp = RobotFileParser()
+        rp.set_url(url)
+        rp.read()
+        return rp.can_fetch("*", url)
 
     def visited(self, url):
-        return url not in self.crawled_urls
+        return url in self.crawled_urls
 
     def save_url_entry(self, url):
         self.crawled_urls.append(url)
-        self.crawled_titles.append(get_title(url))
 
     def process(self, url):
-        self.save_url_entry(url)
+        parsed_html = query_html(url)
+        title = get_title(parsed_html)
 
-        new_urls = extract_links_from(url)
+        self.crawled_titles.append(title)
+
+        new_urls = extract_links_from(parsed_html)
         self.queue_manager.add_to_back_queues(new_urls)
 
+        self.save_url_entry(url)
+
     def crawl(self):
-        while self.frontier.empty():
+        while not self.frontier.empty():
+            sleep(1)
             url = self.frontier.get_url()
             if self.crawl_allowed(url) and not self.visited(url):
+                print(url)
                 self.process(url)
 
             if self.frontier.empty():

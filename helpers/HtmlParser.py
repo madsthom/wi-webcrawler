@@ -24,7 +24,11 @@ def get_title(parsed_html):
         return "No title found"
 
 
-def extract_links_from(url: str):
-    parsed_html = query_html(url)
+def extract_links_from(parsed_html):
     a_tags = parsed_html.find_all('a')
+    return find_valid_urls(a_tags)
+
+
+def extract_links_from_bs4(bs4):
+    a_tags = bs4.find_all('a')
     return find_valid_urls(a_tags)

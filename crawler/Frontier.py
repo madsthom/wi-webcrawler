@@ -12,7 +12,8 @@ class Frontier:
         return self.front_queue.pop(0)
 
     def add(self, url):
-        self.front_queue.append(url)
+        if url:
+            self.front_queue.append(url)
 
     def add_urls(self, urls: list):
         self.front_queue.extend(urls)

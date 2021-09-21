@@ -11,3 +11,6 @@ class CrawlerHeap:
 
     def remove(self, hostname):
         self.heap.remove(hostname)
+
+    def __len__(self):
+        return len(self.heap)

@@ -14,16 +14,19 @@ class QueueManager:
             self.heap_push(get_hostname(url))
 
     def get_new_seed(self):
-        new_host = self.heap_pop()
-        back_queue = self.get_queue(new_host)
-        new_seed = back_queue.pop(0)
+        if len(self.heap) != 0:
+            new_host = self.heap_pop()
+            back_queue = self.get_queue(new_host)
+            new_seed = back_queue.pop(0)
 
-        if len(back_queue) == 0:
-            self.remove_queue(new_host)
+            if len(back_queue) == 0:
+                self.remove_queue(new_host)
+            else:
+                self.heap_push(new_host)
+
+            return new_seed
         else:
-            self.heap_push(new_host)
-
-        return new_seed
+            return None
 
     def get_queue(self, hostname):
         return self.back_queues.get_queue(hostname)
